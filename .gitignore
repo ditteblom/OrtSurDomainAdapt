@@ -1,0 +1,8 @@
+#OS junk files
+*.DS_Store
+
+#Data
+/data
+
+#notebook
+test.ipynb

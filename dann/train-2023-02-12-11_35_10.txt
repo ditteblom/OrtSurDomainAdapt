@@ -1,0 +1,10 @@
+Finished loading dataset.
+Finished loading dataset.
+Finished loading dataset.
+Data loaded. Start training...
+/Users/ditteblom/miniconda3/envs/cames/lib/python3.10/site-packages/torchvision/models/_utils.py:252: UserWarning: Accessing the model URLs via the internal dictionary of the module is deprecated since 0.13 and may be removed in the future. Please access them via the appropriate Weights Enum instead.
+  warnings.warn(
+/Users/ditteblom/miniconda3/envs/cames/lib/python3.10/site-packages/torch/optim/lr_scheduler.py:265: UserWarning: To get the last learning rate computed by the scheduler, please use `get_last_lr()`.
+  warnings.warn("To get the last learning rate computed by the scheduler, "
+lr [0.010000000000000002, 0.1, 0.1, 0.1]
+Epoch: [1][  0/300]	Time  2.56 ( 2.56)	Data  0.55 ( 0.55)	Loss   0.85 (  0.85)	Domain Acc 45.8 (45.8)
