@@ -1,0 +1,15 @@
+Finished loading dataset.
+Finished loading dataset.
+Finished loading dataset.
+Data loaded. Start training...
+/zhome/f6/e/127187/miniconda3/envs/py39/lib/python3.9/site-packages/torch/optim/lr_scheduler.py:247: UserWarning: To get the last learning rate computed by the scheduler, please use `get_last_lr()`.
+  warnings.warn("To get the last learning rate computed by the scheduler, "
+lr [0.010000000000000002, 0.1, 0.1, 0.1]
+Epoch: [0/100], Regression loss: 0.17587041854858398, Transfer loss: 0.7261046171188354, Total loss: 0.9019750356674194, Domain acc.: 29.166664123535156
+
+Traceback (most recent call last):
+  File "/work3/dgro/OrtSurDomainAdapt/main.py", line 193, in <module>
+    main(args)
+  File "/work3/dgro/OrtSurDomainAdapt/main.py", line 133, in main
+    if mae < best_mae:  
+TypeError: '<' not supported between instances of 'tuple' and 'float'

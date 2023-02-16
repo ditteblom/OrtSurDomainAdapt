@@ -1,9 +1,6 @@
 from typing import List, Dict
 import torch.nn as nn
 
-__all__ = ['DomainDiscriminator']
-
-
 class DomainDiscriminator(nn.Sequential):
     r"""Domain discriminator model from
     `Domain-Adversarial Training of Neural Networks (ICML 2015) <https://arxiv.org/abs/1505.07818>`_

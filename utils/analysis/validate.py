@@ -1,55 +1,80 @@
 import sys
-import time
 import torch
 import torch.nn.functional as F
 
+import numpy as np
 
-sys.path.append('../../..')
-from ..metric import accuracy, ConfusionMatrix
-from ..meter import AverageMeter, ProgressMeter
+import matplotlib.pyplot as plt
 
-def validate(val_loader, model, args, device) -> float:
-    batch_time = AverageMeter('Time', ':6.3f')
-    losses = AverageMeter('Loss', ':.4e')
-    top1 = AverageMeter('Acc@1', ':6.2f')
-    progress = ProgressMeter(
-        len(val_loader),
-        [batch_time, losses, top1],
-        prefix='Test: ')
+import pandas as pd
+
+import seaborn as sns
+
+from sklearn.manifold import TSNE
+
+device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+
+def validate(val_loader, model, domain_discriminator, visualize = False):
+    '''Returns the mean validation loss (regressor) and accuracy (domain discriminator) for the validation set given the model.
+    If visualize = True, the features of the validation set are collected and visualized using t-SNE.'''
+    # send model to device
+    model.to(device)
+    domain_discriminator.to(device)
 
     # switch to evaluate mode
     model.eval()
-    if args.per_class_eval:
-        confmat = ConfusionMatrix(len(args.class_names))
-    else:
-        confmat = None
+    domain_discriminator.eval()
 
-    with torch.no_grad():
-        end = time.time()
-        for i, (images, target) in enumerate(val_loader):
-            images = images.to(device)
-            target = target.to(device)
+    # initialize loss and accuracy
+    val_loss = 0
+    val_acc = 0
 
-            # compute output
-            output = model(images)
-            loss = F.mse_loss(output, target)
+    for i in range(len(val_loader)):
+        # fetch data
+        images, scores = next(iter(val_loader))
 
-            # measure accuracy and record loss
-            acc1, = accuracy(output, target, topk=(1,))
-            if confmat:
-                confmat.update(target, output.argmax(1))
-            losses.update(loss.item(), images.size(0))
-            top1.update(acc1.item(), images.size(0))
+        # send data to device
+        images = images.to(device)
+        scores = scores.to(device) # the scores for the source images are between 0 and 1 and for target NaNs (unknown)
+        labels = scores.clone()
+        labels = [1 if x > 0 else 0 for x in labels].to(device) # create list with 1 for source and 0 for target
 
-            # measure elapsed time
-            batch_time.update(time.time() - end)
-            end = time.time()
+        # compute output
+        y, f = model(images)
 
-            if i % args.print_freq == 0:
-                progress.display(i)
+        print(y.shape)
+        print(f.shape)
 
-        print(' * Acc@1 {top1.avg:.3f}'.format(top1=top1))
-        if confmat:
-            print(confmat.format(args.class_names))
+        # compute validation loss
+        val_loss += F.mse_loss(scores, y)
+
+        # compute domain labels
+        d_labels = domain_discriminator(images)
+
+        # compute accuracy
+        val_acc += torch.sum(d_labels == labels).item() / len(labels)
+
+        if visualize:
+            # initialize tsne
+            tsne = TSNE(n_components=2)
+            # collect features
+            tsne_result = tsne.fit_transform(f.detach().cpu().numpy())
+            tsne_result_df = pd.DataFrame({'tsne_1': tsne_result[:,0], 'tsne_2': tsne_result[:,1], 'label': labels.detach().cpu().numpy()})
+            fig, ax = plt.subplots(1)
+            sns.scatterplot(x='tsne_1', y='tsne_2', hue='label', data=tsne_result_df, ax=ax,s=120)
+            lim = (tsne_result.min()-5, tsne_result.max()+5)
+            ax.set_xlim(lim)
+            ax.set_ylim(lim)
+            ax.set_aspect('equal')
+            ax.legend(bbox_to_anchor=(1.05, 1), loc=2, borderaxespad=0.0)
+
+            # save figure
+            fig.savefig('results/tsne.png', bbox_inches='tight')
+
+    return val_loss, val_acc
+
+            
+
+
 
     return top1.avg

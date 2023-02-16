@@ -1,0 +1,29 @@
+Finished loading dataset.
+Finished loading dataset.
+Finished loading dataset.
+Data loaded. Start training...
+/zhome/f6/e/127187/miniconda3/envs/py39/lib/python3.9/site-packages/torch/optim/lr_scheduler.py:247: UserWarning: To get the last learning rate computed by the scheduler, please use `get_last_lr()`.
+  warnings.warn("To get the last learning rate computed by the scheduler, "
+lr [0.010000000000000002, 0.1, 0.1, 0.1]
+Epoch: [0/100], Regression loss: 0.22489631175994873, Transfer loss: 0.6371667981147766, Total loss: 0.8620631098747253, Domain acc.: 54.166664123535156
+
+Traceback (most recent call last):
+  File "/work3/dgro/OrtSurDomainAdapt/main.py", line 164, in <module>
+    main(args)
+  File "/work3/dgro/OrtSurDomainAdapt/main.py", line 100, in main
+    (val_loss, val_acc) = validate(val_loader, regressor, dann)
+  File "/work3/dgro/OrtSurDomainAdapt/utils/analysis/validate.py", line 24, in validate
+    for i, (images, scores) in enumerate(val_loader):
+  File "/zhome/f6/e/127187/miniconda3/envs/py39/lib/python3.9/site-packages/torch/utils/data/dataloader.py", line 517, in __next__
+    data = self._next_data()
+  File "/zhome/f6/e/127187/miniconda3/envs/py39/lib/python3.9/site-packages/torch/utils/data/dataloader.py", line 557, in _next_data
+    data = self._dataset_fetcher.fetch(index)  # may raise StopIteration
+  File "/zhome/f6/e/127187/miniconda3/envs/py39/lib/python3.9/site-packages/torch/utils/data/_utils/fetch.py", line 47, in fetch
+    return self.collate_fn(data)
+  File "/zhome/f6/e/127187/miniconda3/envs/py39/lib/python3.9/site-packages/torch/utils/data/_utils/collate.py", line 83, in default_collate
+    return [default_collate(samples) for samples in transposed]
+  File "/zhome/f6/e/127187/miniconda3/envs/py39/lib/python3.9/site-packages/torch/utils/data/_utils/collate.py", line 83, in <listcomp>
+    return [default_collate(samples) for samples in transposed]
+  File "/zhome/f6/e/127187/miniconda3/envs/py39/lib/python3.9/site-packages/torch/utils/data/_utils/collate.py", line 55, in default_collate
+    return torch.stack(batch, 0, out=out)
+RuntimeError: All input tensors must be on the same device. Received cpu and cuda:0

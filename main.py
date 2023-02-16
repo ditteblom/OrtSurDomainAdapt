@@ -1,6 +1,7 @@
 import argparse
 import os.path as osp
 import time
+import shutil
 
 import torchvision.transforms as transforms
 import torchvision.models as models
@@ -20,7 +21,11 @@ from utils.misc.data_iter import ForeverDataIterator
 from utils.misc.da_loss import DomainAdversarialLoss
 from utils.meter import AverageMeter, ProgressMeter
 import utils.models as models
-from utils.analysis import collect_feature, tsne, a_distance, validate
+from utils.analysis.validate import validate
+from utils.analysis.collect_feature import collect_feature
+from utils.analysis.tsne import visualize
+from utils.analysis.a_distance import calculate
+from utils.training.train import train
 
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
@@ -31,9 +36,9 @@ def main(args):
     # data augmentation
     train_transform = transforms.Compose([transforms.ToTensor(),
                                     transforms.Resize((size,size)),
-                                    #transforms.RandomHorizontalFlip(),
+                                    transforms.RandomHorizontalFlip(),
                                     transforms.RandomChoice([
-                                    #transforms.GaussianBlur(kernel_size=3, sigma=(1, 1)),
+                                    transforms.GaussianBlur(kernel_size=3, sigma=(1, 1)),
                                     transforms.RandomRotation(degrees=(15)),])
                                     ])
     val_transform = transforms.Compose([transforms.ToTensor(),
@@ -48,6 +53,7 @@ def main(args):
 
     train_source_iter = ForeverDataIterator(train_source_loader)
     train_target_iter = ForeverDataIterator(train_target_loader)
+    val_iter = ForeverDataIterator(val_loader)
 
     print('Data loaded. Start training...')
 
@@ -72,110 +78,39 @@ def main(args):
     if args.phase != 'train':
         checkpoint = torch.load(logger.get_checkpoint_path('best'), map_location=device)
         regressor.load_state_dict(checkpoint)
-
-    # analysis the model
-    if args.phase == 'analysis':
-        # extract features from both domains
-        feature_extractor = nn.Sequential(regressor.backbone, regressor.pool_layer, regressor.bottleneck).to(device)
-        source_feature = collect_feature(train_source_loader, feature_extractor, device)
-        target_feature = collect_feature(train_target_loader, feature_extractor, device)
-        # plot t-SNE
-        tSNE_filename = osp.join(logger.visualize_directory, 'TSNE.png')
-        tsne.visualize(source_feature, target_feature, tSNE_filename)
-        print("Saving t-SNE to", tSNE_filename)
-        # calculate A-distance, which is a measure for distribution discrepancy
-        A_distance = a_distance.calculate(source_feature, target_feature, device)
-        print("A-distance =", A_distance)
-        return
+    
 
     if args.phase == 'test':
-        acc1 = utils.validate(test_loader, classifier, args, device)
-        print(acc1)
-        return
+        (test_loss, test_acc) = validate(test_loader, regressor, args, device)
+        print(f'Test loss: {test_loss:.4f}, Test accuracy: {test_acc:.4f}')
 
-    # start training
-    best_mae = 100000.
-    for epoch in range(args.epochs):
-        # train for one epoch
-        print("lr", lr_scheduler.get_lr())
-        train(train_source_iter, train_target_iter, regressor, dann, optimizer,
-              lr_scheduler, epoch, args)
+    if args.phase == 'train':
+        # start training
+        for epoch in range(args.epochs):
+            # train for one epoch
+            print("lr", lr_scheduler.get_lr())
+            train(train_source_iter, train_target_iter, regressor, dann, optimizer,
+                lr_scheduler, epoch, args)
 
-        # evaluate on validation set
-        mae = validate(val_loader, regressor, args, 1, device)
+            # evaluate on validation set
+            (val_loss, val_acc) = validate(val_loader, regressor, dann)
+            print(f'Val loss: {val_loss:.4f}, Val accuracy: {val_acc:.4f}')
 
-        # remember best mae and save checkpoint
-        torch.save(regressor.state_dict(), logger.get_checkpoint_path('latest'))
-        if mae < best_mae:  
-            shutil.copy(logger.get_checkpoint_path('latest'), logger.get_checkpoint_path('best'))
-        best_mae = min(mae, best_mae)
-        print("mean MAE {:6.3f} best MAE {:6.3f}".format(mae, best_mae))
+            # remember best mae and save checkpoint
+            #torch.save(regressor.state_dict(), logger.get_checkpoint_path('latest'))
+            #if mae < best_mae:  
+            #    shutil.copy(logger.get_checkpoint_path('latest'), logger.get_checkpoint_path('best'))
+            #best_mae = min(mae, best_mae)
+            #print("mean MAE {:6.3f} best MAE {:6.3f}".format(mae, best_mae))
 
-    print("best_mae = {:6.3f}".format(best_mae))
+        #print("best_mae = {:6.3f}".format(best_mae))
 
-    logger.close()
-
-def train(train_source_iter: ForeverDataIterator, train_target_iter: ForeverDataIterator,
-          model: Regressor, domain_adv: DomainAdversarialLoss, optimizer: SGD,
-          lr_scheduler: LambdaLR, epoch: int, args: argparse.Namespace):
-    batch_time = AverageMeter('Time', ':5.2f')
-    data_time = AverageMeter('Data', ':5.2f')
-    losses = AverageMeter('Loss', ':6.2f')
-    domain_accs = AverageMeter('Domain Acc', ':3.1f')
-    progress = ProgressMeter(
-        args.iters_per_epoch,
-        [batch_time, data_time, losses, domain_accs],
-        prefix="Epoch: [{}]".format(epoch+1))
-
-    # switch to train mode
-    model.train()
-    domain_adv.train()
-
-    end = time.time()
-    for i in range(args.iters_per_epoch):
-        x_s, labels_s = next(train_source_iter)
-        x_t = next(train_target_iter)
-
-        # send to device
-        x_s, labels_s = x_s.to(device), labels_s.to(device)
-        x_t = x_t.to(device)
-
-        # measure data loading time
-        data_time.update(time.time() - end)
-
-        # compute output
-        x = torch.cat((x_s, x_t), dim=0)
-        y, f = model(x)
-        y_s, _ = y.chunk(2, dim=0)
-        f_s, f_t = f.chunk(2, dim=0)
-
-        cls_loss = F.mse_loss(y_s.squeeze(), labels_s)
-        transfer_loss = domain_adv(f_s, f_t)
-        domain_acc = domain_adv.domain_discriminator_accuracy
-        loss = cls_loss + transfer_loss * args.trade_off
-
-
-        losses.update(loss.item(), x_s.size(0))
-        domain_accs.update(domain_acc.item(), x_s.size(0))
-
-        # compute gradient and do SGD step
-        optimizer.zero_grad()
-        loss.backward()
-        optimizer.step()
-        lr_scheduler.step()
-
-        # measure elapsed time
-        batch_time.update(time.time() - end)
-        end = time.time()
-
-        if i % args.print_freq == 0:
-            progress.display(i)
 
 if __name__ == '__main__':
 
     parser = argparse.ArgumentParser(description='DANN for Regression Domain Adaptation')
     # dataset parameters
-    parser.add_argument('--resize-size', type=int, default=128)
+    parser.add_argument('--resize-size', type=int, default=224)
     parser.add_argument('--trade-off', default=1., type=float,
                         help='the trade-off hyper-parameter for transfer loss')
     # training parameters
@@ -194,7 +129,7 @@ if __name__ == '__main__':
                         help='number of data loading workers (default: 4)')
     parser.add_argument('--epochs', default=20, type=int, metavar='N',
                         help='number of total epochs to run')
-    parser.add_argument('-i', '--iters-per-epoch', default=300, type=int,
+    parser.add_argument('-i', '--iters-per-epoch', default=100, type=int,
                         help='Number of iterations per epoch')
     parser.add_argument('-p', '--print-freq', default=100, type=int,
                         metavar='N', help='print frequency (default: 100)')
@@ -212,13 +147,12 @@ if __name__ == '__main__':
     parser.add_argument('--alpha', type=float, default='1', help='alpha for elu activation function')
     
     # Training configuration.
-    parser.add_argument('--data_dir', type=str, default='Data/')
-    parser.add_argument('--batch_size', type=int, default=2, help='batch size')
+    parser.add_argument('--data_dir', type=str, default='data/')
+    parser.add_argument('--batch_size', type=int, default=6, help='batch size')
     parser.add_argument('--num_iters', type=int, default=1000, help='number of total iterations')
     parser.add_argument('--learning_rate', type=float, default=0.00001, help='learning rate for optimizer')
     
     # Miscellaneous.
-    parser.add_argument('--log_step', type=int, default=1)
     parser.add_argument('--run_name', type=str, default=datetime.now().strftime('%y%B%d_%H%M_%S'))
 
     args = parser.parse_args()

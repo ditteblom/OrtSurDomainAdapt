@@ -8,7 +8,7 @@ from torchvision.transforms import transforms
 import torch.nn as nn
 
 # train on GPU if available
-device = torch.device('cuda' if torch.cuda.is_available() else 'mps')
+device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
 
 # Define a prediction function
 def predict(model, testloader):

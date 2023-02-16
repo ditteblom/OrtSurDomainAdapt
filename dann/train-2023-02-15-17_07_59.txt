@@ -1,0 +1,19 @@
+Finished loading dataset.
+Finished loading dataset.
+Finished loading dataset.
+Data loaded. Start training...
+/zhome/f6/e/127187/miniconda3/envs/py39/lib/python3.9/site-packages/torch/optim/lr_scheduler.py:247: UserWarning: To get the last learning rate computed by the scheduler, please use `get_last_lr()`.
+  warnings.warn("To get the last learning rate computed by the scheduler, "
+lr [0.010000000000000002, 0.1, 0.1, 0.1]
+Epoch: [1][  0/100]	Time  1.01 ( 1.01)	Data  0.96 ( 0.96)	Loss   0.90 (  0.90)	Domain Acc 45.8 (45.8)
+/work3/dgro/OrtSurDomainAdapt/utils/analysis/validate.py:37: UserWarning: Using a target size (torch.Size([12])) that is different to the input size (torch.Size([12, 1])). This will likely lead to incorrect results due to broadcasting. Please ensure they have the same size.
+  loss = F.mse_loss(output, target)
+Test: [0/7]	Time  0.358 ( 0.358)	Loss 1.1955e-02 (1.1955e-02)	Acc@1   0.00 (  0.00)
+ * Acc@1 0.000
+hej
+Traceback (most recent call last):
+  File "/work3/dgro/OrtSurDomainAdapt/main.py", line 247, in <module>
+    main(args)
+  File "/work3/dgro/OrtSurDomainAdapt/main.py", line 132, in main
+    shutil.copy(logger.get_checkpoint_path('latest'), logger.get_checkpoint_path('best'))
+NameError: name 'shutil' is not defined

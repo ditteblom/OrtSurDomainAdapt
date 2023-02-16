@@ -1,0 +1,27 @@
+Finished loading dataset.
+Finished loading dataset.
+Finished loading dataset.
+Data loaded. Start training...
+/zhome/f6/e/127187/miniconda3/envs/py39/lib/python3.9/site-packages/torch/optim/lr_scheduler.py:247: UserWarning: To get the last learning rate computed by the scheduler, please use `get_last_lr()`.
+  warnings.warn("To get the last learning rate computed by the scheduler, "
+lr [0.010000000000000002, 0.1, 0.1, 0.1]
+Epoch: [0/100], Regression loss: 0.1703309416770935, Transfer loss: 0.667692244052887, Total loss: 0.8380231857299805, Domain acc.: 58.33333206176758
+
+Traceback (most recent call last):
+  File "/work3/dgro/OrtSurDomainAdapt/main.py", line 164, in <module>
+    main(args)
+  File "/work3/dgro/OrtSurDomainAdapt/main.py", line 100, in main
+    (val_loss, val_acc) = validate(val_loader, regressor, dann)
+  File "/work3/dgro/OrtSurDomainAdapt/utils/analysis/validate.py", line 19, in validate
+    for i, (images, scores) in enumerate(val_loader):
+  File "/zhome/f6/e/127187/miniconda3/envs/py39/lib/python3.9/site-packages/torch/utils/data/dataloader.py", line 517, in __next__
+    data = self._next_data()
+  File "/zhome/f6/e/127187/miniconda3/envs/py39/lib/python3.9/site-packages/torch/utils/data/dataloader.py", line 557, in _next_data
+    data = self._dataset_fetcher.fetch(index)  # may raise StopIteration
+  File "/zhome/f6/e/127187/miniconda3/envs/py39/lib/python3.9/site-packages/torch/utils/data/_utils/fetch.py", line 44, in fetch
+    data = [self.dataset[idx] for idx in possibly_batched_index]
+  File "/zhome/f6/e/127187/miniconda3/envs/py39/lib/python3.9/site-packages/torch/utils/data/_utils/fetch.py", line 44, in <listcomp>
+    data = [self.dataset[idx] for idx in possibly_batched_index]
+  File "/work3/dgro/OrtSurDomainAdapt/utils/misc/data_loader.py", line 232, in __getitem__
+    return image.float(), score.float()
+AttributeError: 'numpy.float64' object has no attribute 'float'

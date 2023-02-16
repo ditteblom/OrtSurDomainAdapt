@@ -1,0 +1,16 @@
+Finished loading dataset.
+Finished loading dataset.
+Finished loading dataset.
+Data loaded. Start training...
+/zhome/f6/e/127187/miniconda3/envs/py39/lib/python3.9/site-packages/torch/optim/lr_scheduler.py:247: UserWarning: To get the last learning rate computed by the scheduler, please use `get_last_lr()`.
+  warnings.warn("To get the last learning rate computed by the scheduler, "
+lr [0.010000000000000002, 0.1, 0.1, 0.1]
+Epoch: [1][  0/100]	Time  1.01 ( 1.01)	Data  0.96 ( 0.96)	Loss   0.94 (  0.94)	Domain Acc 29.2 (29.2)
+Traceback (most recent call last):
+  File "/work3/dgro/OrtSurDomainAdapt/main.py", line 247, in <module>
+    main(args)
+  File "/work3/dgro/OrtSurDomainAdapt/main.py", line 127, in main
+    mae = validate(val_loader, regressor, args, device)
+  File "/work3/dgro/OrtSurDomainAdapt/utils/analysis/validate.py", line 22, in validate
+    if args.per_class_eval:
+AttributeError: 'Namespace' object has no attribute 'per_class_eval'

@@ -1,0 +1,60 @@
+Finished loading dataset.
+Finished loading dataset.
+Finished loading dataset.
+Data loaded. Start training...
+/zhome/f6/e/127187/miniconda3/envs/py39/lib/python3.9/site-packages/torch/optim/lr_scheduler.py:247: UserWarning: To get the last learning rate computed by the scheduler, please use `get_last_lr()`.
+  warnings.warn("To get the last learning rate computed by the scheduler, "
+lr [0.010000000000000002, 0.1, 0.1, 0.1]
+Epoch: [1][  0/100]	Time  0.99 ( 0.99)	Data  0.94 ( 0.94)	Loss   0.82 (  0.82)	Domain Acc 66.7 (66.7)
+/work3/dgro/OrtSurDomainAdapt/utils/analysis/validate.py:37: UserWarning: Using a target size (torch.Size([12])) that is different to the input size (torch.Size([12, 1])). This will likely lead to incorrect results due to broadcasting. Please ensure they have the same size.
+  loss = F.mse_loss(output, target)
+Test: [0/7]	Time  0.374 ( 0.374)	Loss 2.5731e-02 (2.5731e-02)	Acc@1   0.00 (  0.00)
+ * Acc@1 0.000
+hej
+mean MAE  0.000 best MAE  0.000
+lr [0.009925650290240805, 0.09925650290240803, 0.09925650290240803, 0.09925650290240803]
+Epoch: [2][  0/100]	Time  0.95 ( 0.95)	Data  0.91 ( 0.91)	Loss   0.03 (  0.03)	Domain Acc 100.0 (100.0)
+Test: [0/7]	Time  0.381 ( 0.381)	Loss 6.6673e-03 (6.6673e-03)	Acc@1   0.00 (  0.00)
+ * Acc@1 0.000
+hej
+mean MAE  0.000 best MAE  0.000
+lr [0.009852577760521605, 0.09852577760521605, 0.09852577760521605, 0.09852577760521605]
+Epoch: [3][  0/100]	Time  0.93 ( 0.93)	Data  0.91 ( 0.91)	Loss   0.02 (  0.02)	Domain Acc 100.0 (100.0)
+Test: [0/7]	Time  0.376 ( 0.376)	Loss 8.1501e-03 (8.1501e-03)	Acc@1   0.00 (  0.00)
+ * Acc@1 0.000
+hej
+mean MAE  0.000 best MAE  0.000
+lr [0.00978074826968673, 0.09780748269686729, 0.09780748269686729, 0.09780748269686729]
+Epoch: [4][  0/100]	Time  0.96 ( 0.96)	Data  0.92 ( 0.92)	Loss   0.01 (  0.01)	Domain Acc 100.0 (100.0)
+Traceback (most recent call last):
+  File "/work3/dgro/OrtSurDomainAdapt/main.py", line 248, in <module>
+    main(args)
+  File "/work3/dgro/OrtSurDomainAdapt/main.py", line 124, in main
+    train(train_source_iter, train_target_iter, regressor, dann, optimizer,
+  File "/work3/dgro/OrtSurDomainAdapt/main.py", line 159, in train
+    x_s, labels_s = next(train_source_iter)
+  File "/work3/dgro/OrtSurDomainAdapt/utils/misc/data_iter.py", line 43, in __next__
+    data = next(self.iter)
+  File "/zhome/f6/e/127187/miniconda3/envs/py39/lib/python3.9/site-packages/torch/utils/data/dataloader.py", line 517, in __next__
+    data = self._next_data()
+  File "/zhome/f6/e/127187/miniconda3/envs/py39/lib/python3.9/site-packages/torch/utils/data/dataloader.py", line 557, in _next_data
+    data = self._dataset_fetcher.fetch(index)  # may raise StopIteration
+  File "/zhome/f6/e/127187/miniconda3/envs/py39/lib/python3.9/site-packages/torch/utils/data/_utils/fetch.py", line 44, in fetch
+    data = [self.dataset[idx] for idx in possibly_batched_index]
+  File "/zhome/f6/e/127187/miniconda3/envs/py39/lib/python3.9/site-packages/torch/utils/data/_utils/fetch.py", line 44, in <listcomp>
+    data = [self.dataset[idx] for idx in possibly_batched_index]
+  File "/work3/dgro/OrtSurDomainAdapt/utils/misc/data_loader.py", line 212, in __getitem__
+    images = self.transform(img)
+  File "/zhome/f6/e/127187/miniconda3/envs/py39/lib/python3.9/site-packages/torchvision/transforms/transforms.py", line 60, in __call__
+    img = t(img)
+  File "/zhome/f6/e/127187/miniconda3/envs/py39/lib/python3.9/site-packages/torch/nn/modules/module.py", line 889, in _call_impl
+    result = self.forward(*input, **kwargs)
+  File "/zhome/f6/e/127187/miniconda3/envs/py39/lib/python3.9/site-packages/torchvision/transforms/transforms.py", line 273, in forward
+    return F.resize(img, self.size, self.interpolation)
+  File "/zhome/f6/e/127187/miniconda3/envs/py39/lib/python3.9/site-packages/torchvision/transforms/functional.py", line 377, in resize
+    return F_t.resize(img, size=size, interpolation=interpolation.value)
+  File "/zhome/f6/e/127187/miniconda3/envs/py39/lib/python3.9/site-packages/torchvision/transforms/functional_tensor.py", line 515, in resize
+    img = interpolate(img, size=[size_h, size_w], mode=interpolation, align_corners=align_corners)
+  File "/zhome/f6/e/127187/miniconda3/envs/py39/lib/python3.9/site-packages/torch/nn/functional.py", line 3554, in interpolate
+    return torch._C._nn.upsample_bilinear2d(input, output_size, align_corners, scale_factors)
+KeyboardInterrupt

@@ -1,0 +1,47 @@
+Finished loading dataset.
+Finished loading dataset.
+Finished loading dataset.
+Data loaded. Start training...
+/zhome/f6/e/127187/miniconda3/envs/py39/lib/python3.9/site-packages/torch/optim/lr_scheduler.py:247: UserWarning: To get the last learning rate computed by the scheduler, please use `get_last_lr()`.
+  warnings.warn("To get the last learning rate computed by the scheduler, "
+lr [0.010000000000000002, 0.1, 0.1, 0.1]
+Epoch: [0/100], Regression loss: 0.20791921019554138,                Transfer loss: 0.8246123194694519, Total loss: 1.032531499862671, Domain acc.: 29.166664123535156
+
+ * Acc@1 0.000
+______________________
+mean MAE  0.000 best MAE  0.000
+lr [0.009925650290240805, 0.09925650290240803, 0.09925650290240803, 0.09925650290240803]
+Epoch: [0/100], Regression loss: 0.007212023250758648,                Transfer loss: 2.622619604153442e-06, Total loss: 0.007214645855128765, Domain acc.: 100.0
+
+ * Acc@1 0.000
+______________________
+mean MAE  0.000 best MAE  0.000
+lr [0.009852577760521605, 0.09852577760521605, 0.09852577760521605, 0.09852577760521605]
+Epoch: [0/100], Regression loss: 0.005154467653483152,                Transfer loss: 8.555912245356012e-06, Total loss: 0.005163023713976145, Domain acc.: 100.0
+
+Traceback (most recent call last):
+  File "/work3/dgro/OrtSurDomainAdapt/main.py", line 232, in <module>
+    main(args)
+  File "/work3/dgro/OrtSurDomainAdapt/main.py", line 124, in main
+    train(train_source_iter, train_target_iter, regressor, dann, optimizer,
+  File "/work3/dgro/OrtSurDomainAdapt/main.py", line 152, in train
+    x_s, labels_s = next(train_source_iter)
+  File "/work3/dgro/OrtSurDomainAdapt/utils/misc/data_iter.py", line 43, in __next__
+    data = next(self.iter)
+  File "/zhome/f6/e/127187/miniconda3/envs/py39/lib/python3.9/site-packages/torch/utils/data/dataloader.py", line 517, in __next__
+    data = self._next_data()
+  File "/zhome/f6/e/127187/miniconda3/envs/py39/lib/python3.9/site-packages/torch/utils/data/dataloader.py", line 557, in _next_data
+    data = self._dataset_fetcher.fetch(index)  # may raise StopIteration
+  File "/zhome/f6/e/127187/miniconda3/envs/py39/lib/python3.9/site-packages/torch/utils/data/_utils/fetch.py", line 44, in fetch
+    data = [self.dataset[idx] for idx in possibly_batched_index]
+  File "/zhome/f6/e/127187/miniconda3/envs/py39/lib/python3.9/site-packages/torch/utils/data/_utils/fetch.py", line 44, in <listcomp>
+    data = [self.dataset[idx] for idx in possibly_batched_index]
+  File "/work3/dgro/OrtSurDomainAdapt/utils/misc/data_loader.py", line 216, in __getitem__
+    image = self.transform(img)
+  File "/zhome/f6/e/127187/miniconda3/envs/py39/lib/python3.9/site-packages/torchvision/transforms/transforms.py", line 60, in __call__
+    img = t(img)
+  File "/zhome/f6/e/127187/miniconda3/envs/py39/lib/python3.9/site-packages/torchvision/transforms/transforms.py", line 97, in __call__
+    return F.to_tensor(pic)
+  File "/zhome/f6/e/127187/miniconda3/envs/py39/lib/python3.9/site-packages/torchvision/transforms/functional.py", line 117, in to_tensor
+    return img.to(dtype=default_float_dtype).div(255)
+KeyboardInterrupt

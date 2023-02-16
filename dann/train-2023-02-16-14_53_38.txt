@@ -1,0 +1,17 @@
+Finished loading dataset.
+Finished loading dataset.
+Finished loading dataset.
+Data loaded. Start training...
+/zhome/f6/e/127187/miniconda3/envs/py39/lib/python3.9/site-packages/torch/optim/lr_scheduler.py:247: UserWarning: To get the last learning rate computed by the scheduler, please use `get_last_lr()`.
+  warnings.warn("To get the last learning rate computed by the scheduler, "
+lr [0.010000000000000002, 0.1, 0.1, 0.1]
+Epoch: [0/100], Regression loss: 0.21221983432769775, Transfer loss: 0.7953662872314453, Total loss: 1.007586121559143, Domain acc.: 29.16666603088379
+
+Traceback (most recent call last):
+  File "/work3/dgro/OrtSurDomainAdapt/main.py", line 193, in <module>
+    main(args)
+  File "/work3/dgro/OrtSurDomainAdapt/main.py", line 129, in main
+    mae = validate(val_loader, regressor, dann)
+  File "/work3/dgro/OrtSurDomainAdapt/utils/analysis/validate.py", line 20, in validate
+    discriminator.eval()
+NameError: name 'discriminator' is not defined

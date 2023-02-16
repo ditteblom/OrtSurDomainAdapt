@@ -1,0 +1,15 @@
+Finished loading dataset.
+Finished loading dataset.
+Finished loading dataset.
+Data loaded. Start training...
+/zhome/f6/e/127187/miniconda3/envs/py39/lib/python3.9/site-packages/torch/optim/lr_scheduler.py:247: UserWarning: To get the last learning rate computed by the scheduler, please use `get_last_lr()`.
+  warnings.warn("To get the last learning rate computed by the scheduler, "
+lr [0.010000000000000002, 0.1, 0.1, 0.1]
+Traceback (most recent call last):
+  File "/work3/dgro/OrtSurDomainAdapt/main.py", line 193, in <module>
+    main(args)
+  File "/work3/dgro/OrtSurDomainAdapt/main.py", line 125, in main
+    train(train_source_iter, train_target_iter, regressor, dann, optimizer,
+  File "/work3/dgro/OrtSurDomainAdapt/utils/training/train.py", line 13, in train
+    end = time.time()
+NameError: name 'time' is not defined

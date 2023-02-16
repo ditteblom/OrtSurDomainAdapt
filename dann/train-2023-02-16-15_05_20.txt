@@ -1,0 +1,58 @@
+Finished loading dataset.
+Finished loading dataset.
+Finished loading dataset.
+Data loaded. Start training...
+/zhome/f6/e/127187/miniconda3/envs/py39/lib/python3.9/site-packages/torch/optim/lr_scheduler.py:247: UserWarning: To get the last learning rate computed by the scheduler, please use `get_last_lr()`.
+  warnings.warn("To get the last learning rate computed by the scheduler, "
+lr [0.010000000000000002, 0.1, 0.1, 0.1]
+Epoch: [0/100], Regression loss: 0.1518307477235794, Transfer loss: 0.73724365234375, Total loss: 0.8890743851661682, Domain acc.: 50.0
+
+Val loss: 0.0000, Val accuracy: 0.0000
+lr [0.009925650290240805, 0.09925650290240803, 0.09925650290240803, 0.09925650290240803]
+Epoch: [0/100], Regression loss: 0.021548695862293243, Transfer loss: 1.3970716281619389e-05, Total loss: 0.021562665700912476, Domain acc.: 100.0
+
+Traceback (most recent call last):
+  File "/work3/dgro/OrtSurDomainAdapt/utils/misc/data_iter.py", line 43, in __next__
+    data = next(self.iter)
+  File "/zhome/f6/e/127187/miniconda3/envs/py39/lib/python3.9/site-packages/torch/utils/data/dataloader.py", line 517, in __next__
+    data = self._next_data()
+  File "/zhome/f6/e/127187/miniconda3/envs/py39/lib/python3.9/site-packages/torch/utils/data/dataloader.py", line 556, in _next_data
+    index = self._next_index()  # may raise StopIteration
+  File "/zhome/f6/e/127187/miniconda3/envs/py39/lib/python3.9/site-packages/torch/utils/data/dataloader.py", line 508, in _next_index
+    return next(self._sampler_iter)  # may raise StopIteration
+StopIteration
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/work3/dgro/OrtSurDomainAdapt/main.py", line 164, in <module>
+    main(args)
+  File "/work3/dgro/OrtSurDomainAdapt/main.py", line 96, in main
+    train(train_source_iter, train_target_iter, regressor, dann, optimizer,
+  File "/work3/dgro/OrtSurDomainAdapt/utils/training/train.py", line 17, in train
+    x_s, labels_s = next(train_source_iter)
+  File "/work3/dgro/OrtSurDomainAdapt/utils/misc/data_iter.py", line 48, in __next__
+    data = next(self.iter)
+  File "/zhome/f6/e/127187/miniconda3/envs/py39/lib/python3.9/site-packages/torch/utils/data/dataloader.py", line 517, in __next__
+    data = self._next_data()
+  File "/zhome/f6/e/127187/miniconda3/envs/py39/lib/python3.9/site-packages/torch/utils/data/dataloader.py", line 557, in _next_data
+    data = self._dataset_fetcher.fetch(index)  # may raise StopIteration
+  File "/zhome/f6/e/127187/miniconda3/envs/py39/lib/python3.9/site-packages/torch/utils/data/_utils/fetch.py", line 44, in fetch
+    data = [self.dataset[idx] for idx in possibly_batched_index]
+  File "/zhome/f6/e/127187/miniconda3/envs/py39/lib/python3.9/site-packages/torch/utils/data/_utils/fetch.py", line 44, in <listcomp>
+    data = [self.dataset[idx] for idx in possibly_batched_index]
+  File "/work3/dgro/OrtSurDomainAdapt/utils/misc/data_loader.py", line 213, in __getitem__
+    img = imread(image_path, plugin='pil')
+  File "/zhome/f6/e/127187/miniconda3/envs/py39/lib/python3.9/site-packages/skimage/io/_io.py", line 48, in imread
+    img = call_plugin('imread', fname, plugin=plugin, **plugin_args)
+  File "/zhome/f6/e/127187/miniconda3/envs/py39/lib/python3.9/site-packages/skimage/io/manage_plugins.py", line 207, in call_plugin
+    return func(*args, **kwargs)
+  File "/zhome/f6/e/127187/miniconda3/envs/py39/lib/python3.9/site-packages/skimage/io/_plugins/pil_plugin.py", line 49, in imread
+    return pil_to_ndarray(im, dtype=dtype, img_num=img_num)
+  File "/zhome/f6/e/127187/miniconda3/envs/py39/lib/python3.9/site-packages/skimage/io/_plugins/pil_plugin.py", line 70, in pil_to_ndarray
+    image.getdata()[0]
+  File "/zhome/f6/e/127187/.local/lib/python3.9/site-packages/PIL/Image.py", line 1294, in getdata
+    self.load()
+  File "/zhome/f6/e/127187/.local/lib/python3.9/site-packages/PIL/ImageFile.py", line 253, in load
+    n, err_code = decoder.decode(b)
+KeyboardInterrupt
